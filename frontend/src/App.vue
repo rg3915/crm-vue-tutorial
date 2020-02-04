@@ -6,6 +6,9 @@
 </template>
 <script>
 import Customers from './components/Customers.vue'
+import axios from 'axios'
+
+const endpoint = 'http://localhost:8000'
 
 export default {
   name: 'app',
@@ -14,18 +17,14 @@ export default {
   },
   data() {
     return {
-      customers: [{
-          'id': 1,
-          'first_name': 'Regis',
-          'last_name': 'Santos',
-        },
-        {
-          'id': 2,
-          'first_name': 'Ronaldo',
-          'last_name': 'Silva',
-        },
-      ]
+      customers: []
     }
+  },
+  created() {
+    axios.get(endpoint + '/api/customers/')
+      .then(response => {
+        this.customers = response.data.data
+      })
   }
 }
 </script>
