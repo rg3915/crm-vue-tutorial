@@ -20,7 +20,7 @@
         </div>
       </form>
     </div>
-    <button class="btn btn-primary mb-3" @click="saveCustomers">Salvar</button>
+    <button class="btn btn-primary mb-3" @click="saveCustomer">Salvar</button>
     <hr>
     <h1>Clientes</h1>
     <table class="table">
@@ -30,6 +30,7 @@
           <th>Nome</th>
           <th>Sobrenome</th>
           <th>E-mail</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
@@ -38,6 +39,9 @@
           <td>{{ item.first_name }}</td>
           <td>{{ item.last_name }}</td>
           <td>{{ item.email }}</td>
+          <td>
+            <button @click="editCustomer(item)">Editar</button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -67,7 +71,7 @@ export default {
       })
   },
   methods: {
-    saveCustomers() {
+    saveCustomer() {
       let bodyFormData = new FormData();
       bodyFormData.append('username', this.username);
       bodyFormData.append('first_name', this.first_name);
@@ -78,6 +82,12 @@ export default {
         .then(response => {
           this.customers.push(response.data.data)
         })
+    },
+    editCustomer(item) {
+      this.username = item.username
+      this.first_name = item.first_name
+      this.last_name = item.last_name
+      this.email = item.email
     }
   }
 }
