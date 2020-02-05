@@ -7,4 +7,5 @@ app_name = 'core'
 
 urlpatterns = [
     path('', v.customers, name='customers'),
+    path('add/', v.customer_create, name='customer_create'),
 ]

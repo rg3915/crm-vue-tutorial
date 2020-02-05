@@ -3,6 +3,10 @@
     <div class="container">
       <form action="">
         <div class="form-group">
+          <label for="username">Usuário</label>
+          <input class="form-control" v-model="username">
+        </div>
+        <div class="form-group">
           <label for="first_name">Nome</label>
           <input class="form-control" v-model="first_name">
         </div>
@@ -10,33 +14,75 @@
           <label for="last_name">Sobrenome</label>
           <input class="form-control" v-model="last_name">
         </div>
+        <div class="form-group">
+          <label for="email">E-mail</label>
+          <input type='email' class="form-control" v-model="email">
+        </div>
       </form>
     </div>
-    <button class="btn btn-primary mb-3">Salvar</button>
+    <button class="btn btn-primary mb-3" @click="saveCustomers">Salvar</button>
     <hr>
     <h1>Clientes</h1>
     <table class="table">
       <thead>
         <tr>
+          <th>Usuário</th>
           <th>Nome</th>
           <th>Sobrenome</th>
+          <th>E-mail</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in customers" :key="item.id">
+          <td>{{ item.username }}</td>
           <td>{{ item.first_name }}</td>
           <td>{{ item.last_name }}</td>
+          <td>{{ item.email }}</td>
         </tr>
       </tbody>
     </table>
   </div>
 </template>
+
 <script>
+import axios from 'axios'
+
+const endpoint = 'http://localhost:8000'
+
 export default {
   name: 'Customers',
-  props: ['customers', 'first_name', 'last_name'],
+  data() {
+    return {
+      customers: [],
+      username: '',
+      first_name: '',
+      last_name: '',
+      email: '',
+    }
+  },
+  created() {
+    axios.get(endpoint + '/api/customers/')
+      .then(response => {
+        this.customers = response.data.data
+      })
+  },
+  methods: {
+    saveCustomers() {
+      let bodyFormData = new FormData();
+      bodyFormData.append('username', this.username);
+      bodyFormData.append('first_name', this.first_name);
+      bodyFormData.append('last_name', this.last_name);
+      bodyFormData.append('email', this.email);
+
+      axios.post(endpoint + '/api/customers/add/', bodyFormData)
+        .then(response => {
+          this.customers.push(response.data.data)
+        })
+    }
+  }
 }
 </script>
+
 <style scoped>
 .table {
   border-collapse: collapse;
